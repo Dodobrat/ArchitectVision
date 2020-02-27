@@ -1,42 +1,39 @@
-import React, {useEffect, useRef} from 'react';
-import * as THREE from "three";
+import React, {useRef, useState} from 'react'
+import {Canvas, useFrame} from 'react-three-fiber'
 
-const Viewer = () => {
-    const mount = useRef();
+function Box(props) {
+    // This reference will give us direct access to the mesh
+    const mesh = useRef()
 
-    useEffect(() => {
-        // === THREE.JS CODE START ===
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
+    // Set up state for the hovered and active state
+    const [hovered, setHover] = useState(false)
+    const [active, setActive] = useState(false)
 
-        renderer.setSize( window.innerWidth, window.innerHeight );
-
-        mount.current.appendChild( renderer.domElement );
-
-        const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-        const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-        const cube = new THREE.Mesh( geometry, material );
-        scene.add( cube );
-
-        camera.position.z = 5;
-
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize( window.innerWidth, window.innerHeight );
-
-        const animate = function () {
-            requestAnimationFrame( animate );
-            cube.rotation.x += 0.01;
-            cube.rotation.y += 0.01;
-            renderer.render( scene, camera );
-        };
-        animate();
-        // === THREE.JS EXAMPLE CODE END ===
-    }, []);
+    // Rotate mesh every frame, this is outside of React without overhead
+    useFrame(() => (mesh.current.rotation.x = mesh.current.rotation.y += 0.01))
 
     return (
-        <div ref={mount} />
+        <mesh
+            {...props}
+            ref={mesh}
+            scale={active ? [1.5, 1.5, 1.5] : [1, 1, 1]}
+            onClick={e => setActive(!active)}
+            onPointerOver={e => setHover(true)}
+            onPointerOut={e => setHover(false)}>
+            <boxBufferGeometry attach="geometry" args={[1, 1, 1]}/>
+            <meshStandardMaterial attach="material" color={hovered ? 'hotpink' : 'orange'}/>
+        </mesh>
+    )
+}
+
+const Viewer = () => {
+    return (
+        <Canvas>
+            <ambientLight/>
+            <pointLight position={[10, 10, 10]}/>
+            <Box position={[-1.2, 0, 0]}/>
+            <Box position={[1.2, 0, 0]}/>
+        </Canvas>
     );
 };
 
