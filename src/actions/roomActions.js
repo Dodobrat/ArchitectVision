@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {
     CLEAR_ROOM_MESSAGES,
-    CLOSE_ROOM_MODAL, CREATE_ROOM_ERROR, CREATE_ROOM_SUCCESS,
+    CLOSE_ROOM_MODAL, CREATE_ROOM_ERROR, CREATE_ROOM_SUCCESS, GET_ROOM_ERROR, GET_ROOM_SUCCESS,
     GET_ROOMS_ERROR,
     GET_ROOMS_SUCCESS, OPEN_ROOM_MODAL,
     SET_ROOMS_LOADING
@@ -24,6 +24,22 @@ export const getRooms = () => async dispatch => {
     } catch (err) {
         dispatch({
             type: GET_ROOMS_ERROR,
+            payload: err.response.data.errors
+        })
+    }
+};
+
+export const getRoom = (id) => async dispatch => {
+    try {
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/rooms/${id}`, config);
+
+        dispatch({
+            type: GET_ROOM_SUCCESS,
+            payload: res.data
+        });
+    } catch (err) {
+        dispatch({
+            type: GET_ROOM_ERROR,
             payload: err.response.data.errors
         })
     }

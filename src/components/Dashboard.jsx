@@ -23,13 +23,14 @@ const Dashboard = ({rooms: {rooms, roomsLoading, roomModal, success, error, data
         getRooms();
         //eslint-disable-next-line
     }, [success, error, dataUpdate]);
+
     return (
         <>
             <div className="container">
                 {roomsLoading && <Loader/>}
                 <div className="card-row">
                     {rooms?.map((item, index) =>
-                        <Card key={index} header={<Link to={`/${item.id}`}>{item.title}</Link>} className="mini-card">
+                        <Card key={index} header={<Link to={`/room/${item.id}`}>{item.title}</Link>} className="mini-card">
                             <small className="card-timestamp">{parseDate(item.createdAt)}</small>
                         </Card>
                     )}

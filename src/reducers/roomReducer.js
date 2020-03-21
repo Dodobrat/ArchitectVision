@@ -1,6 +1,6 @@
 import {
     CLEAR_ROOM_MESSAGES,
-    CLOSE_ROOM_MODAL, CREATE_ROOM_SUCCESS,
+    CLOSE_ROOM_MODAL, CREATE_ROOM_SUCCESS, GET_ROOM_ERROR, GET_ROOM_SUCCESS,
     GET_ROOMS_ERROR,
     GET_ROOMS_SUCCESS,
     OPEN_ROOM_MODAL,
@@ -9,6 +9,7 @@ import {
 
 const initialState = {
     rooms: [],
+    room: {},
     currentRoom: null,
     roomModal: false,
     roomsLoading: false,
@@ -28,7 +29,13 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 roomsLoading: false,
-                rooms: action.payload
+                rooms: action.payload === "" ? [] : action.payload
+            };
+        case GET_ROOM_SUCCESS:
+            return {
+                ...state,
+                roomsLoading: false,
+                room: action.payload
             };
         case CREATE_ROOM_SUCCESS:
             return {
@@ -54,6 +61,7 @@ export default (state = initialState, action) => {
                 dataUpdate: state.dataUpdate + 1
             };
         case GET_ROOMS_ERROR:
+        case GET_ROOM_ERROR:
             return {
                 ...state,
                 roomsLoading: false,

@@ -5,14 +5,15 @@ import {BrowserRouter as Router, Redirect, Route, Switch} from "react-router-dom
 import {Provider} from "react-redux";
 import store from "./store";
 import Dashboard from "./components/Dashboard";
+import Viewer from "./components/Viewer";
 
 const App = () => (
     <Provider store={store}>
         <Router>
             <Switch>
-                <Route path="/" component={Dashboard}/>
-                {/*<Route path="/:id" component={Dashboard}/>*/}
-                <Redirect to="/"/>
+                <Route path="/app" exact component={Dashboard}/>
+                <Route path="/room/:id" exact component={Viewer}/>
+                <Redirect to="/app"/>
             </Switch>
         </Router>
     </Provider>
