@@ -187,3 +187,14 @@ html {
   }
 
 }
+
+html,
+body,
+#root,
+canvas{
+  background: #f0f0ff;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}

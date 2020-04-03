@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
 import {getRooms, openRoomModal, setRoomsLoading} from "../actions/roomActions";
@@ -15,12 +15,23 @@ const Dashboard = ({rooms: {rooms, roomsLoading, roomModal, success, error, data
         document.title = "AV | Dashboard";
         setRoomsLoading();
         getRooms();
+        setCounter(counter + 1);
         //eslint-disable-next-line
     }, []);
 
+    const [counter, setCounter] = useState(0);
+
     useEffect(() => {
-        setRoomsLoading();
-        getRooms();
+        if (counter > 0){
+            setRoomsLoading();
+            getRooms();
+        }
+        if (error.length > 0){
+            console.error(error);
+        }
+        if (success.length > 0){
+            console.log(success);
+        }
         //eslint-disable-next-line
     }, [success, error, dataUpdate]);
 
