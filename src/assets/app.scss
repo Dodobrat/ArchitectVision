@@ -186,6 +186,18 @@ html {
     width: 100%;
   }
 
+  .notes-container{
+    z-index: 999;
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 20vw;
+    min-width: 15rem;
+    background: $bg-card;
+    box-shadow: 0 0 10px 5px rgba(0,0,0,0.2);
+  }
+
 }
 
 html,

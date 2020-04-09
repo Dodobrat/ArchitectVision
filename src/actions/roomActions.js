@@ -1,9 +1,18 @@
 import axios from 'axios';
 import {
+    ADD_ROOM_NOTE_ERROR,
+    ADD_ROOM_NOTE_SUCCESS,
     CLEAR_ROOM_MESSAGES,
-    CLOSE_ROOM_MODAL, CREATE_ROOM_ERROR, CREATE_ROOM_SUCCESS, GET_ROOM_ERROR, GET_ROOM_SUCCESS,
+    CLOSE_ROOM_MODAL,
+    CREATE_ROOM_ERROR,
+    CREATE_ROOM_SUCCESS,
+    GET_ROOM_ERROR,
+    GET_ROOM_NOTES_ERROR,
+    GET_ROOM_NOTES_SUCCESS,
+    GET_ROOM_SUCCESS,
     GET_ROOMS_ERROR,
-    GET_ROOMS_SUCCESS, OPEN_ROOM_MODAL,
+    GET_ROOMS_SUCCESS,
+    OPEN_ROOM_MODAL,
     SET_ROOMS_LOADING
 } from "./types";
 
@@ -56,6 +65,38 @@ export const addRoom = (data) => async dispatch => {
     } catch (err) {
         dispatch({
             type: CREATE_ROOM_ERROR,
+            payload: err.response.data.errors
+        })
+    }
+};
+
+export const addRoomNote = (data) => async dispatch => {
+    try {
+        const res = await axios.post(`${process.env.REACT_APP_API_URL}/notes`, data, config);
+
+        dispatch({
+            type: ADD_ROOM_NOTE_SUCCESS,
+            payload: res.data
+        });
+    } catch (err) {
+        dispatch({
+            type: ADD_ROOM_NOTE_ERROR,
+            payload: err.response.data.errors
+        })
+    }
+};
+
+export const getRoomNotes = (id) => async dispatch => {
+    try {
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/notes/room/${id}`, config);
+
+        dispatch({
+            type: GET_ROOM_NOTES_SUCCESS,
+            payload: res.data
+        });
+    } catch (err) {
+        dispatch({
+            type: GET_ROOM_NOTES_ERROR,
             payload: err.response.data.errors
         })
     }

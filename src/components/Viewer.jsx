@@ -7,10 +7,8 @@ import {connect} from "react-redux";
 import PropTypes from "prop-types";
 import {withRouter} from "react-router-dom";
 import {getRoom} from "../actions/roomActions";
-import {
-    // useSpring,
-    a
-} from "react-spring/three";
+import {a} from "react-spring/three";
+import Notes from "./Notes";
 
 extend({OrbitControls});
 
@@ -43,86 +41,40 @@ const Viewer = ({match, history, rooms: {room}, getRoom}) => {
 
         return <orbitControls
             autoRotate
-            // maxPolarAngle={Math.PI / 2}
-            // minPolarAngle={Math.PI / 3}
             args={[camera, gl.domElement]}
             ref={orbitRef}
         />
     };
-
-    // const Plane = () => (
-    //     <mesh rotation={[-Math.PI / 2, 0, 0]}
-    //           position={[0, -0.5, 0]}
-    //           receiveShadow
-    //     >
-    //         <planeBufferGeometry
-    //             attach="geometry"
-    //             args={[100, 100]}
-    //         />
-    //         <meshPhysicalMaterial
-    //             attach="material"
-    //             color="white"
-    //         />
-    //     </mesh>
-    // );
 
     const Model = () => {
 
         const [model, setModel] = useState();
 
         useEffect(() => {
-            new GLTFLoader().load(currRoom?.model.replace('./files/', 'http://localhost:5000/'), setModel);
-        }, []);
+            new GLTFLoader().load(currRoom?.model?.replace('./files/', 'http://localhost:5000/'), setModel);
+        },[room]);
 
         return model ? <a.primitive object={model.scene}/> : null;
     };
 
-    // const Box = () => {
-    //
-    //     const [hovered, setHovered] = useState(false);
-    //     const [active, setActive] = useState(false);
-    //     const props = useSpring({
-    //         scale: active ? [1.5, 1.5, 1.5] : [1, 1, 1],
-    //         hover: hovered ? "gray" : "purple"
-    //     });
-    //
-    //     return (
-    //         <a.mesh onPointerOver={() => setHovered(true)}
-    //                 onPointerOut={() => setHovered(false)}
-    //                 onClick={() => setActive(!active)}
-    //                 castShadow
-    //                 scale={props.scale}>
-    //             <spotLight position={[0, 5, 10]} penumbra={1} castShadow/>
-    //             <ambientLight/>
-    //             <boxBufferGeometry
-    //                 attach="geometry"
-    //                 args={[1, 1, 1]}
-    //             />
-    //             <a.meshPhysicalMaterial
-    //                 attach="material"
-    //                 color={props.hover}
-    //             />
-    //         </a.mesh>
-    //     );
-    // };
-
     return (
-        <Canvas
-            camera={{
-                position: [0, 0, 5]
-            }}
-            onCreated={({gl}) => {
-                gl.shadowMap.enabled = true;
-                gl.shadowMap.type = THREE.PCFSoftShadowMap
-            }}>
-            <ambientLight intensity={1}/>
-            <spotLight position={[0, 20, 5]}/>
-            {/*<fog attach="fog" args={["white", 5, 20]}/>*/}
-            <Controls/>
-            {/*<Box/>*/}
-            {/*<Plane/>*/}
-            <Model/>
-        </Canvas>
+        <>
+            <Notes roomId={match.params.id}/>
+            <Canvas
+                camera={{
+                    position: [0, 0, 5]
+                }}
+                onCreated={({gl}) => {
+                    gl.shadowMap.enabled = true;
+                    gl.shadowMap.type = THREE.PCFSoftShadowMap
+                }}>
+                <ambientLight intensity={1}/>
+                <spotLight position={[5, 5, 5]}/>
+                <spotLight position={[-5, 5, 5]}/>
+                <Controls/>
+                <Model/>
+            </Canvas>
+        </>
     );
 };
 
