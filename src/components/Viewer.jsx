@@ -28,8 +28,6 @@ const Viewer = ({match, history, rooms: {room}, getRoom}) => {
         //eslint-disable-next-line
     }, [room]);
 
-    const currRoom = room[0];
-
     const Controls = () => {
 
         const orbitRef = useRef();
@@ -40,7 +38,6 @@ const Viewer = ({match, history, rooms: {room}, getRoom}) => {
         });
 
         return <orbitControls
-            autoRotate
             args={[camera, gl.domElement]}
             ref={orbitRef}
         />
@@ -48,11 +45,15 @@ const Viewer = ({match, history, rooms: {room}, getRoom}) => {
 
     const Model = () => {
 
-        const [model, setModel] = useState();
+        const [model, setModel] = useState(null);
 
         useEffect(() => {
-            new GLTFLoader().load(currRoom?.model?.replace('./files/', 'http://localhost:5000/'), setModel);
-        },[room]);
+            if (room?.model){
+                new GLTFLoader().load(room?.model?.replace('./files/', 'http://localhost:5000/'), setModel);
+            }else {
+                setModel(null);
+            }
+        },[]);
 
         return model ? <a.primitive object={model.scene}/> : null;
     };
@@ -62,7 +63,7 @@ const Viewer = ({match, history, rooms: {room}, getRoom}) => {
             <Notes roomId={match.params.id}/>
             <Canvas
                 camera={{
-                    position: [0, 0, 5]
+                    position: [0, 0, 25]
                 }}
                 onCreated={({gl}) => {
                     gl.shadowMap.enabled = true;
@@ -72,7 +73,7 @@ const Viewer = ({match, history, rooms: {room}, getRoom}) => {
                 <spotLight position={[5, 5, 5]}/>
                 <spotLight position={[-5, 5, 5]}/>
                 <Controls/>
-                <Model/>
+                {room && <Model/>}
             </Canvas>
         </>
     );

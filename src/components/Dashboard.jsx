@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {getRooms, openRoomModal, setRoomsLoading} from "../actions/roomActions";
+import {clearRoomMessages, getRooms, openRoomModal, setRoomsLoading} from "../actions/roomActions";
 import Loader from "./Loader";
 import Card from "./ui/Card";
 import {parseDate} from "./util/DateParse";
@@ -9,31 +9,26 @@ import {Link} from "react-router-dom";
 import Footer from "./ui/Footer";
 import RoomModal from "./RoomModal";
 
-const Dashboard = ({rooms: {rooms, roomsLoading, roomModal, success, error, dataUpdate}, getRooms, setRoomsLoading, openRoomModal}) => {
+const Dashboard = ({rooms: {rooms, roomsLoading, roomModal, success, error, dataUpdate}, getRooms, setRoomsLoading, openRoomModal, clearRoomMessages}) => {
 
     useEffect(() => {
         document.title = "AV | Dashboard";
         setRoomsLoading();
         getRooms();
-        setCounter(counter + 1);
         //eslint-disable-next-line
     }, []);
 
-    const [counter, setCounter] = useState(0);
-
     useEffect(() => {
-        if (counter > 0){
-            setRoomsLoading();
-            getRooms();
-        }
         if (error.length > 0){
             console.error(error);
         }
         if (success.length > 0){
+            setRoomsLoading();
+            getRooms().then(() => clearRoomMessages());
             console.log(success);
         }
         //eslint-disable-next-line
-    }, [success, error, dataUpdate]);
+    }, [success, error]);
 
     return (
         <>
@@ -41,7 +36,7 @@ const Dashboard = ({rooms: {rooms, roomsLoading, roomModal, success, error, data
                 {roomsLoading && <Loader/>}
                 <div className="card-row">
                     {rooms?.map((item, index) =>
-                        <Card key={index} header={<Link to={`/room/${item.id}`}>{item.title}</Link>} className="mini-card">
+                        <Card key={index} header={<Link to={`/room/${item.id}`}>{item.title}</Link>}>
                             <small className="card-timestamp">{parseDate(item.createdAt)}</small>
                         </Card>
                     )}
@@ -66,4 +61,4 @@ const mapStateToProps = state => ({
     rooms: state.rooms
 });
 
-export default connect(mapStateToProps, {getRooms, setRoomsLoading, openRoomModal})(Dashboard);
+export default connect(mapStateToProps, {getRooms, setRoomsLoading, openRoomModal, clearRoomMessages})(Dashboard);

@@ -78,7 +78,7 @@ const RoomModal = ({rooms: {currentRoom, success, error}, addRoom, closeRoomModa
                            defaultValue={formValues.model}
                            onChange={onFileChange}
                            className="form-input"/>
-                    <input type="submit"/>
+                    <input type="submit" className="submit"/>
                 </form>
 
             </Card>

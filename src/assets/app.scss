@@ -4,7 +4,7 @@ html {
 
   @import "~@fortawesome/fontawesome-free/css/all.min.css";
 
-  $bg: #f0f0ff;
+  $bg: #efefef;
   $bg-card: #fff;
 
   $primary-font: #252525;
@@ -12,9 +12,9 @@ html {
 
   $accent: #337AB7;
 
-  $shadow: 0 5px 10px -3px rgba($secondary-font, 0.2);
+  $shadow: 0 1px 2px 0 rgba($secondary-font, 0.2);
 
-  body {
+  body, #root {
     background: $bg;
     color: $primary-font;
     padding: 0;
@@ -49,29 +49,28 @@ html {
   }
 
   .card-row {
-    width: 100%;
-    overflow-x: hidden;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    flex-wrap: wrap;
+    padding: 1rem 0.625rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(12.5rem, 1fr));
+    grid-gap: 0.625rem;
   }
 
   .card {
     background: $bg-card;
-    width: 100%;
-    margin: 0.625rem;
-    padding: 1rem;
-    border-radius: 1rem;
+    border-radius: 0.25rem;
     box-shadow: $shadow;
 
     &-header {
-      padding-bottom: 1rem;
       border-bottom: 1px solid rgba($primary-font, 0.1);
       color: $primary-font;
       font-weight: 600;
-      font-size: 1.15rem;
+      font-size: 1rem;
       overflow: hidden;
+      height: 2rem;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 0 0.625rem;
 
       a {
         color: $primary-font;
@@ -90,7 +89,7 @@ html {
     }
 
     &-body {
-      padding-top: 1rem;
+      padding: 0.625rem;
     }
 
     .card-timestamp {
@@ -98,40 +97,34 @@ html {
       font-size: 0.8rem;
     }
 
-    &.mini-card {
-      flex: 1;
-      min-width: 10rem;
-      max-width: 11rem;
-      width: 100%;
-      max-height: 10rem;
-      height: 100%;
-    }
-
     &.placeholder {
+      height: 100%;
+      position: relative;
       background: transparent;
       box-shadow: none;
-      border: 5px dashed $accent;
-      width: 10rem;
-      height: 3.75rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      min-height: 4rem;
 
       .card-body {
-        padding-top: 0;
+        padding: 0;
       }
 
       button {
-        width: 2rem;
-        height: 2rem;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
         background: $accent;
         color: white;
         border: none;
-        border-radius: 0.5rem;
+        border-radius: 0.25rem;
         display: flex;
         justify-content: center;
         align-items: center;
         cursor: pointer;
+        i{
+          font-size: 2rem;
+        }
       }
     }
   }
@@ -140,23 +133,21 @@ html {
     position: fixed;
     top: 0;
     left: 0;
-    bottom: 0;
-    right: 0;
     width: 100%;
     height: 100vh;
     overflow-y: auto;
     background: rgba(0, 0, 0, 0.2);
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
 
     .modal {
       max-width: 30rem;
       width: 100%;
-      margin-top: 2rem;
     }
 
     .card-header-container {
+      width: 100%;
       display: flex;
       justify-content: flex-start;
       align-items: center;
@@ -172,30 +163,97 @@ html {
     }
   }
 
-  input{
+  input, textarea {
     display: block;
     width: 100%;
     margin-bottom: 1rem;
-    &:last-child{
-      margin-bottom: 0;
+    padding: 0.25rem 0;
+    text-indent: 0.625rem;
+    border-radius: 0.25rem;
+    border: 1px solid $secondary-font;
+    &:focus{
+      border: 1px solid $accent;
+      outline: none;
     }
+  }
+
+  textarea{
+    resize: none;
+    width: 100% !important;
+    height: 10rem !important;
   }
 
   label{
     display: block;
-    width: 100%;
+    font-size: 0.8rem;
+  }
+
+  .submit{
+    background: $accent;
+    border: none;
+    cursor: pointer;
+    padding: 0.625rem;
+    color: white;
   }
 
   .notes-container{
+    transition: all 0.3s ease;
     z-index: 999;
     position: fixed;
     left: 0;
+    transform: translateX(-110%);
     top: 0;
     height: 100vh;
-    width: 20vw;
-    min-width: 15rem;
+    width: 15rem;
+    padding: 4rem 0.625rem 0 0.625rem;
     background: $bg-card;
     box-shadow: 0 0 10px 5px rgba(0,0,0,0.2);
+    &.show{
+      transition: all 0.3s ease;
+      transform: translateX(0);
+    }
+  }
+
+  .link{
+    button{
+      position: absolute;
+      top: 0.625rem;
+      width: 4rem;
+      height: 2rem;
+      background: $accent;
+      border: none;
+      border-radius: 0.25rem;
+      color: white;
+      cursor: pointer;
+    }
+  }
+
+  .toggler{
+    transition: all 0.3s ease;
+    z-index: 9999;
+    position: fixed;
+    left: 0;
+    top: 0.625rem;
+    width: 2rem;
+    height: 2rem;
+    background: $accent;
+    border: none;
+    border-radius: 0.25rem;
+    color: white;
+    cursor: pointer;
+    &.active{
+      transition: all 0.3s ease;
+      left: 14.25rem;
+    }
+  }
+
+  .note-item{
+    border-bottom: 1px solid $secondary-font;
+    padding: 0.625rem;
+    small{
+      font-size: 0.8rem;
+      opacity: 0.75;
+    }
   }
 
 }
@@ -204,7 +262,7 @@ html,
 body,
 #root,
 canvas{
-  background: #f0f0ff;
+  background: #efefef;
   width: 100%;
   height: 100%;
   margin: 0;
