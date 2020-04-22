@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {addRoomNote, getRoomNotes} from "../actions/roomActions";
+import {addRoomNote, getRoomNotes, updateRoomNote} from "../actions/roomActions";
 import NoteItem from "./NoteItem";
 import {Link} from "react-router-dom";
 
-const Notes = ({roomId, addRoomNote, rooms: {roomNotes, notesLoading}, getRoomNotes}) => {
+const Notes = ({roomId, addRoomNote, rooms: {roomNotes, currentRoomNote, notesLoading}, getRoomNotes, updateRoomNote}) => {
 
     useEffect(() => {
         if (roomId) {
@@ -27,7 +27,18 @@ const Notes = ({roomId, addRoomNote, rooms: {roomNotes, notesLoading}, getRoomNo
         title: '',
         description: '',
         roomId: roomId
-    })
+    });
+
+    useEffect(() => {
+        if (currentRoomNote){
+            setFormData({
+                ...formData,
+                title: currentRoomNote?.title,
+                description: currentRoomNote?.description
+            });
+        }
+        //eslint-disable-next-line
+    },[currentRoomNote])
 
     const handleChange = e => setFormData({...formData, [e.target.name]: e.target.value});
 
@@ -40,14 +51,25 @@ const Notes = ({roomId, addRoomNote, rooms: {roomNotes, notesLoading}, getRoomNo
 
     const onSubmit = (e) => {
         e.preventDefault();
-        addRoomNote(formData).then(() => {
-            setFormData({
-                ...formData,
-                title: '',
-                description: ''
+        if (currentRoomNote){
+            updateRoomNote(currentRoomNote.id, formData).then(() => {
+                setFormData({
+                    ...formData,
+                    title: '',
+                    description: ''
+                })
+                setCounter(counter + 1);
             })
-            setCounter(counter + 1);
-        });
+        }else{
+            addRoomNote(formData).then(() => {
+                setFormData({
+                    ...formData,
+                    title: '',
+                    description: ''
+                })
+                setCounter(counter + 1);
+            });
+        }
     };
 
     return (
@@ -88,4 +110,4 @@ const mapStateToProps = state => ({
     rooms: state.rooms
 });
 
-export default connect(mapStateToProps, {addRoomNote, getRoomNotes})(Notes);
+export default connect(mapStateToProps, {addRoomNote, getRoomNotes, updateRoomNote})(Notes);

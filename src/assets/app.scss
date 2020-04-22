@@ -171,9 +171,24 @@ html {
     text-indent: 0.625rem;
     border-radius: 0.25rem;
     border: 1px solid $secondary-font;
+    &[type="file"]{
+      border: none;
+      text-indent: 0;
+    }
     &:focus{
       border: 1px solid $accent;
       outline: none;
+    }
+  }
+
+  a{
+    color: $accent;
+    text-decoration: none;
+    button{
+      border: none;
+      margin-bottom: 0.625rem;
+      cursor: pointer;
+      padding: 0.625rem;
     }
   }
 
@@ -234,16 +249,15 @@ html {
     position: fixed;
     left: 0;
     top: 0.625rem;
-    width: 2rem;
-    height: 2rem;
-    background: $accent;
+    background: transparent;
     border: none;
     border-radius: 0.25rem;
-    color: white;
+    color: black;
     cursor: pointer;
+    font-size: 1.25rem;
     &.active{
       transition: all 0.3s ease;
-      left: 14.25rem;
+      left: 14rem;
     }
   }
 
@@ -253,6 +267,27 @@ html {
     small{
       font-size: 0.8rem;
       opacity: 0.75;
+    }
+  }
+
+  .btn-container{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 0.625rem;
+    button{
+      flex: 0 0 45%;
+      width: 100%;
+      border: none;
+      cursor: pointer;
+      height: 2rem;
+      background: darkgreen;
+      color: white;
+      &:first-child{
+        background: darkred;
+        color: white;
+      }
     }
   }
 

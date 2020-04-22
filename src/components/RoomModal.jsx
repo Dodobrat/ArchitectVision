@@ -2,9 +2,9 @@ import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
 import Card from "./ui/Card";
-import {addRoom, clearRoomMessages, closeRoomModal} from "../actions/roomActions";
+import {addRoom, clearRoomMessages, closeRoomModal, updateRoom} from "../actions/roomActions";
 
-const RoomModal = ({rooms: {currentRoom, success, error}, addRoom, closeRoomModal, clearRoomMessages}) => {
+const RoomModal = ({rooms: {currentRoom, success, error}, addRoom, closeRoomModal, clearRoomMessages, updateRoom}) => {
 
     const closeModal = () => {
         closeRoomModal();
@@ -24,7 +24,7 @@ const RoomModal = ({rooms: {currentRoom, success, error}, addRoom, closeRoomModa
 
     const [formValues, setFormValues] = useState({
         title: currentRoom?.title ?? "",
-        model: currentRoom?.model ?? ""
+        model: ""
     });
 
     const onChange = e => {
@@ -36,20 +36,23 @@ const RoomModal = ({rooms: {currentRoom, success, error}, addRoom, closeRoomModa
     };
 
     useEffect(() => {
-        if (success.length > 0){
+        if (success.length > 0) {
             closeRoomModal();
         }
+        if (error.length > 0) {
+            console.log(error);
+        }
         //eslint-disable-next-line
-    },[success, error]);
+    }, [success, error]);
 
     const onSubmit = e => {
         e.preventDefault();
         const inputValues = new FormData();
         inputValues.append('title', formValues.title);
         inputValues.append('model', formValues.model);
-        if (currentRoom){
-
-        }else {
+        if (currentRoom) {
+            updateRoom(currentRoom.id, inputValues).then(() => clearRoomMessages());
+        } else {
             addRoom(inputValues).then(() => clearRoomMessages());
         }
     };
@@ -78,6 +81,14 @@ const RoomModal = ({rooms: {currentRoom, success, error}, addRoom, closeRoomModa
                            defaultValue={formValues.model}
                            onChange={onFileChange}
                            className="form-input"/>
+                    {currentRoom &&
+                    <a
+                        rel="noopener noreferrer"
+                        target="_blank"
+                        href={currentRoom.model?.replace('./files/', 'http://localhost:5000/')}>
+                        <button>Download File</button>
+                    </a>
+                    }
                     <input type="submit" className="submit"/>
                 </form>
 
@@ -94,4 +105,9 @@ const mapStateToProps = state => ({
     rooms: state.rooms
 });
 
-export default connect(mapStateToProps, {closeRoomModal, addRoom, clearRoomMessages})(RoomModal);
+export default connect(mapStateToProps, {
+    closeRoomModal,
+    addRoom,
+    clearRoomMessages,
+    updateRoom
+})(RoomModal);

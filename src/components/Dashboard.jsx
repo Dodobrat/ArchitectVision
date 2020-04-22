@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {clearRoomMessages, getRooms, openRoomModal, setRoomsLoading} from "../actions/roomActions";
+import {clearRoomMessages, deleteRoom, getRooms, openRoomModal, setRoomsLoading} from "../actions/roomActions";
 import Loader from "./Loader";
 import Card from "./ui/Card";
 import {parseDate} from "./util/DateParse";
@@ -9,7 +9,7 @@ import {Link} from "react-router-dom";
 import Footer from "./ui/Footer";
 import RoomModal from "./RoomModal";
 
-const Dashboard = ({rooms: {rooms, roomsLoading, roomModal, success, error, dataUpdate}, getRooms, setRoomsLoading, openRoomModal, clearRoomMessages}) => {
+const Dashboard = ({rooms: {rooms, roomsLoading, roomModal, success, error}, getRooms, setRoomsLoading, openRoomModal, clearRoomMessages, deleteRoom}) => {
 
     useEffect(() => {
         document.title = "AV | Dashboard";
@@ -19,10 +19,10 @@ const Dashboard = ({rooms: {rooms, roomsLoading, roomModal, success, error, data
     }, []);
 
     useEffect(() => {
-        if (error.length > 0){
+        if (error?.length > 0){
             console.error(error);
         }
-        if (success.length > 0){
+        if (success?.length > 0){
             setRoomsLoading();
             getRooms().then(() => clearRoomMessages());
             console.log(success);
@@ -38,6 +38,10 @@ const Dashboard = ({rooms: {rooms, roomsLoading, roomModal, success, error, data
                     {rooms?.map((item, index) =>
                         <Card key={index} header={<Link to={`/room/${item.id}`}>{item.title}</Link>}>
                             <small className="card-timestamp">{parseDate(item.createdAt)}</small>
+                            <div className="btn-container">
+                                <button onClick={() => deleteRoom(item.id)}><i className="fas fa-trash"/> Delete</button>
+                                <button onClick={() => openRoomModal(item)}><i className="fas fa-edit"/> Edit</button>
+                            </div>
                         </Card>
                     )}
                     <Card className="placeholder">
@@ -61,4 +65,4 @@ const mapStateToProps = state => ({
     rooms: state.rooms
 });
 
-export default connect(mapStateToProps, {getRooms, setRoomsLoading, openRoomModal, clearRoomMessages})(Dashboard);
+export default connect(mapStateToProps, {getRooms, setRoomsLoading, openRoomModal, clearRoomMessages, deleteRoom})(Dashboard);

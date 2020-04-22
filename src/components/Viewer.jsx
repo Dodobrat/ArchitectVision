@@ -27,7 +27,8 @@ const Viewer = ({roomId, history, rooms: {room, dataUpdate}, getRoom}) => {
         //eslint-disable-next-line
     }, [roomId, dataUpdate]);
 
-    function Asset({url}) {
+    function Model({url}) {
+
         const [model, setModel] = useState(null);
 
         useEffect(() => {
@@ -54,7 +55,7 @@ const Viewer = ({roomId, history, rooms: {room, dataUpdate}, getRoom}) => {
                     shadow-mapSize-width={2048}
                     shadow-mapSize-height={2048}
                 />
-                <Asset url={room?.model?.replace('./files/', 'http://localhost:5000/')}/>
+                <Model url={room?.model?.replace('./files/', 'http://localhost:5000/')}/>
                 <Controls/>
             </Canvas>
         </>
