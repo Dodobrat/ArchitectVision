@@ -46,7 +46,7 @@ const Notes = ({roomId, addRoomNote, rooms: {roomNotes, notesLoading}, getRoomNo
                 title: '',
                 description: ''
             })
-            setCounter(counter + 1)
+            setCounter(counter + 1);
         });
     };
 
